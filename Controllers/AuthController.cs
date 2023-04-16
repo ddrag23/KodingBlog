@@ -44,7 +44,7 @@ namespace KodingBlog.Controllers
                 new Claim("UserId", user.Id.ToString()),
                 new Claim("Name",user.Name),
                 new Claim("Email",user.Email),
-                new Claim("RoleName",user.Role.Name),
+                new Claim(ClaimTypes.Role,user.Role.Name),
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
