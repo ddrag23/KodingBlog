@@ -52,7 +52,7 @@ namespace KodingBlog.Controllers
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.UtcNow.AddMinutes(10),
+                expires: DateTime.UtcNow.AddDays(7),
                 signingCredentials: signIn);
 
             var userInfo = new UserInfoDto { Id = user.Id,Email = user.Email, Name = user.Name, PhoneNumber = user.PhoneNumber, RoleName = user.Role.Name};
