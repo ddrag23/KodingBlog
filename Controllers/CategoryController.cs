@@ -1,5 +1,4 @@
-﻿using KodingBlog.Dtos.User;
-using KodingBlog.Models;
+﻿using KodingBlog.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,55 +9,54 @@ namespace KodingBlog.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleController : ControllerBase
+    public class CategoryController : ControllerBase
     {
-        private KodingBlogContext dbContext;
-        public RoleController(KodingBlogContext dbContext)
-        {
-            this.dbContext = dbContext;
+    
+        private readonly KodingBlogContext dbContext;
+        public CategoryController(KodingBlogContext context) {
+            dbContext = context;
         }
 
-        // GET: api/<UserController>
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var roles = await dbContext.Roles.ToListAsync();
-            return Ok(roles);
+            var data = await dbContext.Categories.ToListAsync();
+            return Ok(data);
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSingleAsync(int id)
         {
-            var role = await dbContext.Roles.SingleOrDefaultAsync(i => i.Id == id);
-            if (role == null)
+            var data = await dbContext.Categories.SingleOrDefaultAsync(i => i.Id == id);
+            if (data == null)
             {
                 return NotFound();
             }
-            return Ok(role);
+            return Ok(data);
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<IActionResult> Post(Role role)
+        public async Task<IActionResult> Post(Category category)
         {
-           
-            dbContext.Roles.Add(role);
+
+            dbContext.Categories.Add(category);
             await dbContext.SaveChangesAsync();
             return Ok("Data berhasil disimpan");
         }
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Role roleDto)
+        public async Task<IActionResult> Put(int id, Category categoryDto)
         {
-            var role = await dbContext.Users.SingleOrDefaultAsync(i => i.Id == id);
-            if (role == null)
+            var category = await dbContext.Users.SingleOrDefaultAsync(i => i.Id == id);
+            if (category == null)
             {
                 return NotFound();
             }
-            
-            dbContext.Roles.Update(roleDto);
+
+            dbContext.Categories.Update(categoryDto);
             await dbContext.SaveChangesAsync();
             return Ok("Data berhasil diupdate");
 
@@ -68,14 +66,14 @@ namespace KodingBlog.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var role = await dbContext.Roles.SingleOrDefaultAsync(i => i.Id == id);
-            if (role == null)
+            var data = await dbContext.Categories.SingleOrDefaultAsync(i => i.Id == id);
+            if (data == null)
             {
                 return NotFound();
             }
-            dbContext.Roles.Remove(role);
+            dbContext.Categories.Remove(data);
             await dbContext.SaveChangesAsync();
-            return Ok("Data role berhasil dihapus");
+            return Ok("Data kategori berhasil dihapus");
         }
     }
 }
