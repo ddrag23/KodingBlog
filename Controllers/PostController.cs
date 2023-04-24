@@ -18,6 +18,7 @@ namespace KodingBlog.Controllers
             dbContext = context;
         }
 
+        [Authorize]
         [HttpGet("User")]
         public async Task<IActionResult> GetWithUser()
         {
@@ -26,11 +27,10 @@ namespace KodingBlog.Controllers
             return Ok(data);
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var data = await dbContext.Posts.ToListAsync();
+            var data = await dbContext.Posts.Select(i => new PostResponse(i.Id,i.UserId,i.Title,i.Content, i.Category!.CategoryName,i.CategoryId,i.Slug)).ToListAsync();
             return Ok(data);
         }
 
