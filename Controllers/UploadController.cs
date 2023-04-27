@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 using System.Net;
 
 namespace KodingBlog.Controllers
@@ -11,7 +12,7 @@ namespace KodingBlog.Controllers
     {
 
         [HttpGet]
-        public IActionResult index([FromQuery] string filePath)
+        public async Task<IActionResult> Index([FromQuery] string filePath)
         {
             try
             {
@@ -19,22 +20,44 @@ namespace KodingBlog.Controllers
                 if (checkFile)
                 {
 
-                    return Ok(filePath);
+                    var path = Path.GetFullPath(Path.Combine(System.Environment.CurrentDirectory, filePath));
+
+                    FileStream stream = System.IO.File.Open(path,FileMode.Open);
+                    return File(stream, GetContentType(path));
                 }
                 else
                 {
-                    throw new BadHttpRequestException("File not found");
+                    throw new FileNotFoundException();
                 }
             }
-            catch (HttpRequestException ex) when(ex.StatusCode == HttpStatusCode.BadRequest) 
+            catch (HttpRequestException ex) when(ex.StatusCode == HttpStatusCode.NotFound) 
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
             
         }
 
+        [NonAction]
+        private static string GetContentType(string path)
+        {
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            switch (ext)
+            {
+                case ".png":
+                    return "image/png";
+                case ".jpg":
+                    return "image/jpg";
+                case ".jpeg":
+                    return "image/jpeg";
+                case ".pdf":
+                    return "application/pdf";
+                default:
+                    return "application/octet-stream";
+            }
+        }
+
         [HttpPost]
-        public async Task<IActionResult> upload(IFormFile file)
+        public async Task<IActionResult> Upload(IFormFile file)
         {
             try
             {
