@@ -73,14 +73,15 @@ namespace KodingBlog.Controllers
                     {
                         Directory.CreateDirectory(path);
                     }
-                    var filePath = Path.Combine(path, file.FileName);
+                    var fileName = Guid.NewGuid().ToString() + ext;
+                    var filePath = Path.Combine(path, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
                     }
 
-                    return Ok(ext);
+                    return Ok(Path.Combine("Storage","tmp",fileName));
                 }
                 else
                 {
