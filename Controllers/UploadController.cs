@@ -12,7 +12,7 @@ namespace KodingBlog.Controllers
     {
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] string filePath)
+        public  IActionResult Index([FromQuery] string filePath)
         {
             try
             {
