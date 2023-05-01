@@ -1,4 +1,5 @@
-﻿using KodingBlog.Models;
+﻿using DevExtreme.AspNet.Data;
+using KodingBlog.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,15 @@ namespace KodingBlog.Controllers
         private readonly KodingBlogContext dbContext;
         public CategoryController(KodingBlogContext context) {
             dbContext = context;
+        }
+
+        [HttpGet("datagrid")]
+        public async Task<IActionResult> GetDatagridAsync(DataSourceLoadOptions loadOptions)
+        {
+            loadOptions.PrimaryKey = new[] { "Id" };
+
+            var data = await dbContext.Categories.ToListAsync();
+            return Ok(DataSourceLoader.Load(data,loadOptions));
         }
 
         [HttpGet]
